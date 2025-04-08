@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>W3.CSS </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+    .mySlides {display: none}
+
+    /* Chatbot Toggle Button */
+    #chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        transition: all 0.3s ease;
+    }
+    
+    #chatbot-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Chatbot Window */
+    #chatbot {
+        width: 350px;
+        max-height: 500px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+    
+    /* Chatbot Header */
+    #chatbot-header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    #chatbot-title {
+        font-weight: 600;
+        font-size: 18px;
+    }
+    
+    #chatbot-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    
+    /* Chatbot Messages */
+    #chatbot-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        max-height: 350px;
+        background: #f9f9f9;
+    }
+    
+    .message {
+        margin-bottom: 15px;
+        max-width: 80%;
+        padding: 10px 15px;
+        border-radius: 18px;
+        line-height: 1.4;
+        position: relative;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .bot-message {
+        background: #e3f2fd;
+        border-top-left-radius: 5px;
+        align-self: flex-start;
+    }
+    
+    .user-message {
+        background: #4facfe;
+        color: white;
+        border-top-right-radius: 5px;
+        margin-left: auto;
+    }
+    
+    /* Typing Indicator */
+    #typing-indicator {
+        display: none;
+        padding: 10px 15px;
+        background: #e3f2fd;
+        border-radius: 18px;
+        border-top-left-radius: 5px;
+        width: fit-content;
+        margin-bottom: 15px;
+    }
+    
+    .typing-dots {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background: #4facfe;
+        border-radius: 50%;
+        animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+    
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes typingAnimation {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-5px); }
+    }
+    
+    /* Chatbot Input */
+    #chatbot-input-container {
+        display: flex;
+        padding: 10px;
+        background: white;
+        border-top: 1px solid #eee;
+    }
+    
+    #chatbot-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        outline: none;
+        font-size: 14px;
+        transition: border 0.3s;
+    }
+    
+    #chatbot-input:focus {
+        border-color: #4facfe;
+    }
+    
+    #chatbot-send {
+        width: 45px;
+        height: 45px;
+        margin-left: 10px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    #chatbot-send:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 480px) {
+        #chatbot {
+            width: 90vw;
+            right: 5vw;
+            bottom: 80px;
+            max-height: 60vh;
+        }
+        
+        #chatbot-messages {
+            max-height: 45vh;
+        }
+    }
+    
+    /* Quick Replies */
+    .quick-replies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    
+    .quick-reply {
+        background: #e3f2fd;
+        border: none;
+        border-radius: 15px;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .quick-reply:hover {
+        background: #d0e6ff;
+    }
+    </style>
+  </head>
+<body class="w3-content w3-border-left w3-border-right">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+  <div class="w3-container w3-display-container w3-padding-16">
+    <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-transparent w3-display-topright"></i>
+    <h3>Rental</h3>
+    <h3>from $99</h3>
+    <h6>per night</h6>
+    <hr>
+    <form action="/action_page.php" target="_blank">
+      <p><label><i class="fa fa-calendar-check-o"></i> Check In</label></p>
+      <input class="w3-input w3-border" type="text" placeholder="DD MM YYYY" name="CheckIn" required>          
+      <p><label><i class="fa fa-calendar-o"></i> Check Out</label></p>
+      <input class="w3-input w3-border" type="text" placeholder="DD MM YYYY" name="CheckOut" required>         
+      <p><label><i class="fa fa-male"></i> Adults</label></p>
+      <input class="w3-input w3-border" type="number" value="1" name="Adults" min="1" max="6">              
+      <p><label><i class="fa fa-child"></i> Kids</label></p>
+      <input class="w3-input w3-border" type="number" value="0" name="Kids" min="0" max="6">
+      <p><button class="w3-button w3-block w3-green w3-left-align" type="submit"><i class="fa fa-search w3-margin-right"></i> Search availability</button></p>
+    </form>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#apartment" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-building"></i> Apartment</a>
+    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-16" onclick="document.getElementById('subscribe').style.display='block'"><i class="fa fa-rss"></i> Subscribe</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-16"><i class="fa fa-envelope"></i> Contact</a>
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
+  <span class="w3-bar-item">Rental</span>
+  <a href="javascript:void(0)" class="w3-right w3-bar-item w3-button" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-white" style="margin-left:260px">
+
+  <!-- Push down content on small screens -->
+  <div class="w3-hide-large" style="margin-top:80px"></div>
+
+  <!-- Slideshow Header -->
+  <div class="w3-container" id="apartment">
+    <h2 class="w3-text-green">GR Hotels</h2>
+    <div class="w3-display-container mySlides">
+    <img src="https://www.w3schools.com/w3images/livingroom.jpg" style="width:100%;margin-bottom:-6px">
+      <div class="w3-display-bottomleft w3-container w3-black">
+        <p>Living Room</p>
+      </div>
+    </div>
+    <div class="w3-display-container mySlides">
+    <img src="https://www.w3schools.com/w3images/diningroom.jpg" style="width:100%;margin-bottom:-6px">
+      <div class="w3-display-bottomleft w3-container w3-black">
+        <p>Area for dining Room</p>
+      </div>
+    </div>
+    <div class="w3-display-container mySlides">
+    <img src="https://www.w3schools.com/w3images/bedroom.jpg" style="width:100%;margin-bottom:-6px">
+      <div class="w3-display-bottomleft w3-container w3-black">
+        <p>Bedroom</p>
+      </div>
+    </div>
+    <div class="w3-display-container mySlides">
+    <img src="https://www.w3schools.com/w3images/livingroom2.jpg" style="width:100%;margin-bottom:-6px">
+      <div class="w3-display-bottomleft w3-container w3-black">
+        <p>Living Room II</p>
+      </div>
+    </div>
+  </div>
+  <div class="w3-row-padding w3-section">
+    <div class="w3-col s3">
+      <img class="demo w3-opacity w3-hover-opacity-off" src="https://www.w3schools.com/w3images/livingroom.jpg" style="width:100%;cursor:pointer" onclick="currentDiv(1)" title="Living room">
+    </div>
+    <div class="w3-col s3">
+      <img class="demo w3-opacity w3-hover-opacity-off" src="https://www.w3schools.com/w3images/diningroom.jpg" style="width:100%;cursor:pointer" onclick="currentDiv(2)" title="Dining room">
+    </div>
+    <div class="w3-col s3">
+      <img class="demo w3-opacity w3-hover-opacity-off" src="https://www.w3schools.com/w3images/bedroom.jpg" style="width:100%;cursor:pointer" onclick="currentDiv(3)" title="Bedroom">
+    </div>
+    <div class="w3-col s3">
+      <img class="demo w3-opacity w3-hover-opacity-off" src="https://www.w3schools.com/w3images/livingroom2.jpg" style="width:100%;cursor:pointer" onclick="currentDiv(4)" title="Second Living Room">
+    </div>
+  </div>
+
+  <div class="w3-container">
+    <h4><strong>The space</strong></h4>
+    <div class="w3-row w3-large">
+      <div class="w3-col s6">
+        <p><i class="fa fa-fw fa-male"></i> Max people: 4</p>
+        <p><i class="fa fa-fw fa-bath"></i> Bathrooms: 2</p>
+        <p><i class="fa fa-fw fa-bed"></i> Bedrooms: 1</p>
+      </div>
+      <div class="w3-col s6">
+        <p><i class="fa fa-fw fa-clock-o"></i> Check In: After 3PM</p>
+        <p><i class="fa fa-fw fa-clock-o"></i> Check Out: 12PM</p>
+      </div>
+    </div>
+    <hr>
+    
+    <h4><strong>Amenities</strong></h4>
+    <div class="w3-row w3-large">
+      <div class="w3-col s6">
+        <p><i class="fa fa-fw fa-shower"></i> Shower</p>
+        <p><i class="fa fa-fw fa-wifi"></i> WiFi</p>
+        <p><i class="fa fa-fw fa-tv"></i> TV</p>
+      </div>
+      <div class="w3-col s6">
+        <p><i class="fa fa-fw fa-cutlery"></i> Kitchen</p>
+        <p><i class="fa fa-fw fa-thermometer"></i> Heating</p>
+        <p><i class="fa fa-fw fa-wheelchair"></i> Accessible</p>
+      </div>
+    </div>
+    <hr>
+    
+    <h4><strong>Extra Info</strong></h4>
+    <p>Our apartment is really clean and we like to keep it that way. Enjoy the lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>We accept: <i class="fa fa-credit-card w3-large"></i> <i class="fa fa-cc-mastercard w3-large"></i> <i class="fa fa-cc-amex w3-large"></i> <i class="fa fa-cc-cc-visa w3-large"></i><i class="fa fa-cc-paypal w3-large"></i></p>
+    <hr>
+    
+    <h4><strong>Rules</strong></h4>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Subscribe to receive updates on available dates and special offers.</p>
+    <p><button class="w3-button w3-green w3-third" onclick="document.getElementById('subscribe').style.display='block'">Subscribe</button></p>
+  </div>
+  <hr>
+  
+  <!-- Hotel Recommendations Section -->
+  <div class="w3-container" id="recommendations">
+    <h2>Recommended Hotels</h2>
+    <div id="hotel-list" class="w3-row-padding">
+      <p>Loading recommendations...</p>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="w3-container" id="contact">
+    <h2>Contact</h2>
+    <i class="fa fa-map-marker" style="width:30px"></i> Chicago, US<br>
+    <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
+    <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
+    <p>Questions? Go ahead, ask them:</p>
+    <form action="/action_page.php" target="_blank">
+      <p><input class="w3-input w3-border" type="text" placeholder="Name" required name="Name"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Email" required name="Email"></p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Message" required name="Message"></p>
+    <button type="submit" class="w3-button w3-green w3-third">Send a Message</button>
+    </form>
+  </div>
+  
+  <footer class="w3-container w3-padding-16" style="margin-top:32px">Made by<a href="https://www.w3schools.com/spaces" title="W3Schools Spaces" target="_blank" class="w3-hover-text-green"> Gourab Roy</a></footer>
+
+<!-- End page content -->
+</div>
+
+<!-- Subscribe Modal -->
+<div id="subscribe" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom w3-padding-large">
+    <div class="w3-container w3-white w3-center">
+      <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+      <h2 class="w3-wide">SUBSCRIBE</h2>
+      <p>Join our mailing list to receive updates on available dates and special offers.</p>
+      <p><input class="w3-input w3-border" type="text" placeholder="Enter e-mail"></p>
+      <button type="button" class="w3-button w3-padding-large w3-green w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Subscribe</button>
+    </div>
+  </div>
+</div>
+
+<!-- Chatbot Button -->
+<div id="chatbot-container">
+  <button id="chatbot-toggle" class="w3-button w3-green w3-circle w3-xlarge">
+    <i class="fa fa-comments"></i>
+  </button>
+  <div id="chatbot" class="w3-card w3-light-grey w3-round" style="display:none;width:300px;max-width:90vw;">
+    <div class="w3-container w3-green w3-padding">
+      <h4>AI Chatbot</h4>
+      <span class="w3-right w3-button w3-small w3-circle w3-white" onclick="closeChatbot()">&times;</span>
+    </div>
+    <div id="chatbot-messages" class="w3-container" style="height:300px;overflow-y:auto;padding:16px;">
+      <div class="w3-panel w3-leftbar w3-light-grey w3-padding">
+        <p>Hello! I'm your AI assistant. How can I help you today?</p>
+      </div>
+    </div>
+    <div class="w3-container w3-padding">
+      <div class="w3-row">
+        <div class="w3-col" style="width:80%">
+          <input id="chatbot-input" class="w3-input w3-border" type="text" placeholder="Type your question..." autocomplete="off">
+        </div>
+        <div class="w3-col" style="width:20%">
+          <button id="chatbot-send" class="w3-button w3-green w3-block">
+            <i class="fa fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+      <div id="typing-indicator" class="w3-panel w3-leftbar w3-light-grey w3-padding-small" style="display:none;margin-top:8px;">
+        <p><i class="fa fa-circle w3-text-green w3-small"></i> <i class="fa fa-circle w3-text-green w3-small"></i> <i class="fa fa-circle w3-text-green w3-small"></i></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  #chatbot-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: all 0.3s;
+  }
+  
+  #chatbot-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2);
+  }
+  
+  #chatbot {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: all 0.3s;
+  }
+  
+  .chat-message {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  
+  .user-message {
+    background-color: #e3f2fd;
+    margin-left: auto;
+    border-top-right-radius: 0;
+  }
+  
+  .bot-message {
+    background-color: #f1f1f1;
+    margin-right: auto;
+    border-top-left-radius: 0;
+  }
+  
+  @media (max-width: 600px) {
+    #chatbot {
+      width: 90vw;
+      right: 5vw;
+    }
+  }
+</style>
+
+<script>
+  // Chatbot functionality
+  const chatbotToggle = document.getElementById('chatbot-toggle');
+  const chatbot = document.getElementById('chatbot');
+  const chatbotMessages = document.getElementById('chatbot-messages');
+  const chatbotInput = document.getElementById('chatbot-input');
+  const chatbotSend = document.getElementById('chatbot-send');
+  const typingIndicator = document.getElementById('typing-indicator');
+  
+  // Initialize chat history
+  let chatHistory = [
+    {
+      role: "system",
+      content: "You are a helpful assistant. Provide concise and accurate responses to user queries."
+    }
+  ];
+  
+  // Toggle chatbot visibility
+  chatbotToggle.addEventListener('click', () => {
+    chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
+    if (chatbot.style.display === 'block') {
+      chatbotInput.focus();
+    }
+  });
+  
+  function closeChatbot() {
+    chatbot.style.display = 'none';
+  }
+  
+  // Send message when Enter is pressed
+  chatbotInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+  
+  // Send message when button is clicked
+  chatbotSend.addEventListener('click', sendMessage);
+  
+  async function sendMessage() {
+    const userMessage = chatbotInput.value.trim();
+    if (userMessage) {
+      // Add user message to chat
+      addMessage(userMessage, 'user');
+      
+      // Clear input field
+      chatbotInput.value = '';
+      
+      // Show typing indicator
+      typingIndicator.style.display = 'block';
+      scrollToBottom();
+      
+      try {
+        // Add user message to history
+        chatHistory.push({ role: "user", content: userMessage });
+        
+        // Get bot response
+        const botResponse = await getBotResponse(chatHistory);
+        
+        // Add bot response to chat
+        addMessage(botResponse, 'bot');
+        
+        // Add bot response to history (keeping last 6 messages for context)
+        chatHistory.push({ role: "assistant", content: botResponse });
+        if (chatHistory.length > 6) {
+          chatHistory = [
+            chatHistory[0], // keep system message
+            ...chatHistory.slice(-5) // keep last 5 exchanges
+          ];
+        }
+      } catch (error) {
+        console.error('Chatbot error:', error);
+        addMessage("Sorry, I'm having trouble responding. Please try again later.", 'bot');
+      } finally {
+        // Hide typing indicator
+        typingIndicator.style.display = 'none';
+        scrollToBottom();
+      }
+    }
+  }
+  
+  function addMessage(content, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${sender}-message`;
+    messageDiv.innerHTML = `<p>${content}</p>`;
+    chatbotMessages.appendChild(messageDiv);
+    scrollToBottom();
+  }
+  
+  function scrollToBottom() {
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  }
+  
+  async function getBotResponse(messages) {
+    const apiKey = 'JH740NDPjnFUmZxtCly4cuGcCcFT9eP0';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: messages,
+          temperature: 0.7,
+          max_tokens: 200
+        })
+      });
+      
+      console.log('API Response:', response); // Debugging
+      
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Parsed Data:', data); // Debugging
+      return data.choices[0]?.message?.content || "I couldn't generate a response. Please try again.";
+    } catch (error) {
+      console.error('Error fetching bot response:', error);
+      throw error;
+    }
+  }
+</script>
+
+<script>
+  // Fetch hotel recommendations from an API
+  async function fetchHotelRecommendations() {
+    const hotelList = document.getElementById('hotel-list');
+    hotelList.innerHTML = '<p>Loading recommendations...</p>';
+
+    try {
+      // Replace this URL with your actual API endpoint
+      const apiUrl = 'https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=IXA&radius=5&radiusUnit=KM&amenities=SPA&hotelSource=ALL';
+      const apiKey = 'JH740NDPjnFUmZxtCly4cuGcCcFT9eP0';
+
+      // Fetch data from the API
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Clear the loading message
+      hotelList.innerHTML = '';
+
+      // Display hotel recommendations
+      data.data.forEach((hotel) => {
+        const hotelCard = document.createElement('div');
+        hotelCard.className = 'w3-col s12 m6 l4 w3-margin-bottom';
+        hotelCard.innerHTML = `
+          <div class="w3-card w3-padding w3-light-grey">
+            <h4>${hotel.name}</h4>
+            <p><strong>Distance:</strong> ${hotel.distance.value} ${hotel.distance.unit}</p>
+            <p><strong>Amenities:</strong> ${hotel.amenities ? hotel.amenities.join(', ') : 'N/A'}</p>
+            <button class="w3-button w3-green">Book Now</button>
+          </div>
+        `;
+        hotelList.appendChild(hotelCard);
+      });
+    } catch (error) {
+      hotelList.innerHTML = '<p>Failed to load recommendations. Please try again later.</p>';
+      console.error('Error fetching hotel recommendations:', error);
+    }
+  }
+
+  // Call the function to fetch recommendations on page load
+  fetchHotelRecommendations();
+</script>
+
+<script>
+  // Fetch hotel recommendations from Amadeus API
+  async function fetchHotelRecommendations() {
+    const hotelList = document.getElementById('hotel-list');
+    hotelList.innerHTML = '<p>Loading recommendations...</p>';
+    try {
+      // Amadeus API endpoint with query parameters
+      const apiUrl = 'https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=IXA&radius=5&radiusUnit=KM&amenities=SPA&hotelSource=ALL';
+      // New API key
+      const apiKey = 'JH740NDPjnFUmZxtCly4cuGcCcFT9eP0';
+      // Fetch data from the API
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`, // Add the API key in the Authorization header
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      // Clear the loading message
+      hotelList.innerHTML = '';
+      // Display hotel recommendations
+      data.data.forEach((hotel) => {
+        const hotelCard = document.createElement('div');
+        hotelCard.className = 'w3-col s12 m6 l4 w3-margin-bottom';
+        hotelCard.innerHTML = `
+          <div class="w3-card w3-padding w3-light-grey">
+            <h4>${hotel.name}</h4>
+            <p><strong>Distance:</strong> ${hotel.distance.value} ${hotel.distance.unit}</p>
+            <p><strong>Amenities:</strong> ${hotel.amenities ? hotel.amenities.join(', ') : 'N/A'}</p>
+            <button class="w3-button w3-green">Book Now</button>
+          </div>
+        `;
+        hotelList.appendChild(hotelCard);
+      });
+    } catch (error) {
+      hotelList.innerHTML = '<p>Failed to load recommendations Please load agian. Jalandar has 4 hotels to view.</p>';
+      console.error('Error fetching hotel recommendations:', error);
+    }
+  }
+  // Call the function to fetch recommendations on page load
+  fetchHotelRecommendations();
+
+  // OpenRouter API integration
+  async function fetchOpenRouterResponse() {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer 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",
+          "HTTP-Referer": "https://your-site-url.com", // Replace with your site URL
+          "X-Title": "Your Site Name", // Replace with your site name
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "deepseek/deepseek-v3-base:free",
+          "messages": [
+            {
+              "role": "user",
+              "content": "What is the meaning of life?"
+            }
+          ]
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("OpenRouter Response:", data);
+    } catch (error) {
+      console.error("Error fetching OpenRouter response:", error);
+    }
+  }
+  // Call the OpenRouter API function
+  fetchOpenRouterResponse();
+</script>
+
+<script>
+// Script to open and close sidebar when on tablets and phones
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("myOverlay").style.display = "none";
+}
+
+// Slideshow Apartment Images
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function currentDiv(n) {
+  showDivs(slideIndex = n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  for (i = 0; dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" w3-opacity-off", "");
+  }
+  x[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " w3-opacity-off";
+}
+</script>
+</body>
+</html>
